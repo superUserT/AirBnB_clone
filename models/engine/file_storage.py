@@ -11,11 +11,11 @@ class FileStorage:
         if cls is None:
             return FileStorage.__objects
         else:
-            filtered_objs = {}
-            for obj_id, obj in FileStorage.__objects.items():
+            filtered_objects = {}
+            for object_id, obj in FileStorage.__objects.items():
                 if isinstance(obj, cls):
-                    filtered_objs[obj_id] = obj
-            return filtered_objs
+                    filtered_objects[object_id] = obj
+            return filtered_objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
