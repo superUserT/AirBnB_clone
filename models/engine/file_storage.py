@@ -2,6 +2,7 @@ import json
 import os
 import models.base_model
 
+
 class FileStorage:
     __file_path = "file.json"
     __objects = {}
@@ -29,7 +30,6 @@ class FileStorage:
             for key, val in temp.items():
                 temp[key] = val.to_dict()
             json.dump(temp, f)
-
 
     def reload(self):
         """Loads storage dictionary from file"""
