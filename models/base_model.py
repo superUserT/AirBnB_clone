@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+"""This module defines a base model"""
 import uuid
 from datetime import datetime
 from models.__init__ import storage
