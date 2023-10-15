@@ -1,6 +1,5 @@
 import json
-import os
-import models.base_model
+#from models.base_model import BaseModel
 
 
 class FileStorage:
@@ -32,17 +31,14 @@ class FileStorage:
             json.dump(temp, f)
 
     def reload(self):
-        """Loads storage dictionary from file"""
-        from models.base_model import BaseModel
-        
-        classes = {
-                    'BaseModel': BaseModel,
-                    }
+        """Deserializes the JSON file to __objects (only if the JSON file (__file_path) exists)."""
         try:
-            temp = {}
-            with open(FileStorage.__file_path, 'r') as f:
-                temp = json.load(f)
-                for key, val in temp.items():
-                    self.all()[key] = classes[val['__class__']](**val)
+            with open(self.__file_path, 'r') as file:
+                data = json.load(file)
+                for key, val in data.items():
+                    class_name, obj_id = key.split('.')
+                    class_type = eval(class_name)
+                    obj = class_type(**val)
+                    self.new(obj)
         except FileNotFoundError:
             pass
