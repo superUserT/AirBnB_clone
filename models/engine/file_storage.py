@@ -1,41 +1,51 @@
+#!/usr/bin/python3
+"""This module defines the file storage"""
 import json
-import os
-import models.base_model
+
+
 
 class FileStorage:
-    __file_path = "file.json"  # Default path to the JSON file
-    __objects = {}  # Dictionary to store serialized objects
+    __file_path = "file.json"
+    __objects = {}
 
-    def all(self):
-        """Return the dictionary of all objects"""
-        return FileStorage.__objects
+    def all(self, cls=None):
+        """Returns a dictionary of models currently in storage"""
+        if cls is None:
+            return FileStorage.__objects
+        else:
+            filtered_objects = {}
+            for object_id, obj in FileStorage.__objects.items():
+                if isinstance(obj, cls):
+                    filtered_objects[object_id] = obj
+            return filtered_objects
 
     def new(self, obj):
-        """Add a new object to the dictionary"""
-        key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        FileStorage.__objects[key] = obj
+        """Adds new object to storage dictionary"""
+        self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
-        """Serialize and save the objects to the JSON file"""
-        serialized_objects = {}
-        for key, obj in FileStorage.__objects.items():
-            serialized_objects[key] = obj.to_dict()
-
-        with open(FileStorage.__file_path, 'w') as file:
-            json.dump(serialized_objects, file)
+        """Saves storage dictionary to file"""
+        with open(FileStorage.__file_path, 'w') as f:
+            temp = {}
+            for key, val in FileStorage.__objects.items():
+                temp[key] = val.to_dict()
+            json.dump(temp, f)
 
     def reload(self):
-        """Deserialize objects from the JSON file"""
-        if os.path.exists(FileStorage.__file_path):
+        """Deserializes the JSON file to __objects (only if the JSON file (__file_path) exists)."""
+        from models.base_model import BaseModel
+        from models.user import User
+        try:
             with open(FileStorage.__file_path, 'r') as file:
-                try:
-                    deserialized_objects = json.load(file)
-                    for key, obj_dict in deserialized_objects.items():
-                        class_name, obj_id = key.split('.')
-                        # Create instances based on class name and load the data
-                        model_class = models.class_name_to_model[class_name]
-                        obj = model_class(**obj_dict)
-                        FileStorage.__objects[key] = obj
-                except Exception:
-                    pass
-
+                data = json.load(file)
+                for key, val in data.items():
+                    class_name, obj_id = key.split('.')
+                    if class_name == "User":
+                        obj = User(**val)
+                    elif class_name == "BaseModel":
+                        obj = BaseModel(**val)
+                    else:
+                        continue
+                    self.new(obj)
+        except FileNotFoundError:
+            pass
