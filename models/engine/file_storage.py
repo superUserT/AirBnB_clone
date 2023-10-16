@@ -3,7 +3,6 @@
 import json
 
 
-
 class FileStorage:
     __file_path = "file.json"
     __objects = {}
@@ -32,7 +31,8 @@ class FileStorage:
             json.dump(temp, f)
 
     def reload(self):
-        """Deserializes the JSON file to __objects (only if the JSON file (__file_path) exists)."""
+        """Deserializes the JSON file to __objects
+        (only if the JSON file (__file_path) exists)."""
         from models.base_model import BaseModel
         from models.user import User
         try:
