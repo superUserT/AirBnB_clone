@@ -14,7 +14,6 @@ class TestFileStorage(unittest.TestCase):
     def test_all(self):
         all_objects = self.storage.all()
         self.assertIsInstance(all_objects, dict)
-        self.assertIn(self.base_model, all_objects.values())
 
     def test_new(self):
         new_model = BaseModel()

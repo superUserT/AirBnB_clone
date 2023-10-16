@@ -40,3 +40,11 @@ class BaseModel:
         data['created_at'] = self.created_at.isoformat()
         data['updated_at'] = self.updated_at.isoformat()
         return data
+
+    def setUp(self):
+        from models.engine.file_storage import FileStorage
+        self.storage = FileStorage()
+        self.base_model = BaseModel()
+        self.storage.new(self.base_model)
+        self.storage.save() 
+        self.storage.reload()
