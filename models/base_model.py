@@ -46,5 +46,5 @@ class BaseModel:
         self.storage = FileStorage()
         self.base_model = BaseModel()
         self.storage.new(self.base_model)
-        self.storage.save() 
+        self.storage.save()
         self.storage.reload()
