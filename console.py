@@ -87,7 +87,8 @@ class HBNBCommand(cmd.Cmd):
             return
 
         if args:
-            instances = [str(value) for key, value in storage.all().items() if key.split('.')[0] == args[0]]
+            instances = [str(value) for key, value in
+                         storage.all().items() if key.split('.')[0] == args[0]]
         else:
             instances = [str(value) for value in storage.all().values()]
 
@@ -137,6 +138,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_quit(self, line):
         return True
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
