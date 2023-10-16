@@ -3,6 +3,7 @@
 import json
 
 
+
 class FileStorage:
     __file_path = "file.json"
     __objects = {}
@@ -26,20 +27,25 @@ class FileStorage:
         """Saves storage dictionary to file"""
         with open(FileStorage.__file_path, 'w') as f:
             temp = {}
-            temp.update(FileStorage.__objects)
-            for key, val in temp.items():
+            for key, val in FileStorage.__objects.items():
                 temp[key] = val.to_dict()
             json.dump(temp, f)
 
     def reload(self):
         """Deserializes the JSON file to __objects (only if the JSON file (__file_path) exists)."""
+        from models.base_model import BaseModel
+        from models.user import User
         try:
-            with open(self.__file_path, 'r') as file:
+            with open(FileStorage.__file_path, 'r') as file:
                 data = json.load(file)
                 for key, val in data.items():
                     class_name, obj_id = key.split('.')
-                    class_type = eval(class_name)
-                    obj = class_type(**val)
+                    if class_name == "User":
+                        obj = User(**val)
+                    elif class_name == "BaseModel":
+                        obj = BaseModel(**val)
+                    else:
+                        continue
                     self.new(obj)
         except FileNotFoundError:
             pass
