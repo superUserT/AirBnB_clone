@@ -2,7 +2,6 @@
 """This module defines a base model"""
 import uuid
 from datetime import datetime
-from models.__init__ import storage
 
 
 class BaseModel:
@@ -31,7 +30,7 @@ class BaseModel:
     def save(self):
         """Update the updated_at attribute with the current datetime."""
         self.updated_at = datetime.now()
-        storage.save()
+        #storage.save()
 
     def to_dict(self):
         """Return a dictionary representation of the BaseModel instance."""
